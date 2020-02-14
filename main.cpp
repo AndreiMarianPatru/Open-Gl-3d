@@ -5,6 +5,7 @@
 #include<glm/gtc/type_ptr.hpp>
 #include<SDL.h>
 #include <iostream>
+#include "mesh.h"
 
 
 using namespace std;
@@ -81,8 +82,9 @@ int main(int argc, char* argv[])
 	const char* VertexShaderCode =
 		"#version 450\n"
 		"in vec3 vp;"
+		"uniform mat4 model;"
 		"void main(){"
-		"  gl_Position = vec4(vp,1.0);"
+		"  gl_Position = model*vec4(vp,1.0);"
 		"}";
 	const char* FragmentShaderCode =
 		"#version 450\n"
@@ -109,6 +111,8 @@ int main(int argc, char* argv[])
 	glValidateProgram(ShaderPrograme);
 	CheckShaderError(ShaderPrograme, GL_VALIDATE_STATUS, true, "err program is invalid ");
 
+	Mesh Tri1(Vertices, 3);
+	
 	glClearColor(0.0f, 0.15f, 0.3f, 1.0f);
 	glViewport(0, 0, 800, 600);
 
@@ -118,7 +122,16 @@ int main(int argc, char* argv[])
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(ShaderPrograme);
 		glBindVertexArray(VertexArrayObject);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		GLint modelLoc = glGetUniformLocation(ShaderPrograme, "model");
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &Tri1.transform.GetModel()[0][0]);
+		Tri1.transform.setscale(vec3(1));
+		Tri1.transform.setpos(vec3(0.1,0.3,0));
+		Tri1.transform.setrot(vec3(3,3,3));
+		
+		//glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		Tri1.Draw();
 		//glViewport(0, 0, 800, 600);
 		SDL_Delay(16);
 		SDL_GL_SwapWindow(window);
