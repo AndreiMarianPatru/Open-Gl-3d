@@ -6,6 +6,7 @@
 #include<SDL.h>
 #include <iostream>
 #include "mesh.h"
+#include "Camera.h"
 
 
 using namespace std;
@@ -43,6 +44,10 @@ int main(int argc, char* argv[])
 	SDL_Window* window = SDL_CreateWindow("myapp", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 	SDL_GLContext GLContext = SDL_GL_CreateContext(window);
 
+	Camera camera(vec3(0, 0, -3), 70.0f, (float)800 / 600, 0.01f, 1000.0f);
+	mat4 camera_perspective = camera.GetViewProjection();
+
+	
 	glewExperimental = GL_TRUE;
 	GLenum status = glewInit();
 	glEnable(GL_DEPTH_TEST);
@@ -82,9 +87,10 @@ int main(int argc, char* argv[])
 	const char* VertexShaderCode =
 		"#version 450\n"
 		"in vec3 vp;"
+		"uniform mat4 perspective;"
 		"uniform mat4 model;"
 		"void main(){"
-		"  gl_Position = model*vec4(vp,1.0);"
+		"  gl_Position = perspective*model*vec4(vp,1.0);"
 		"}";
 	const char* FragmentShaderCode =
 		"#version 450\n"
@@ -123,8 +129,15 @@ int main(int argc, char* argv[])
 		glUseProgram(ShaderPrograme);
 		glBindVertexArray(VertexArrayObject);
 
+		GLint perspectiveLoc = glGetUniformLocation(ShaderPrograme, "perspective");
+		glUniformMatrix4fv(perspectiveLoc, 1, GL_FALSE, &camera_perspective[0][0]);
+
+		
 		GLint modelLoc = glGetUniformLocation(ShaderPrograme, "model");
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &Tri1.transform.GetModel()[0][0]);
+
+		
+		
 		Tri1.transform.setscale(vec3(1));
 		Tri1.transform.setpos(vec3(0.1,0.3,0));
 		Tri1.transform.setrot(vec3(3,3,3));
