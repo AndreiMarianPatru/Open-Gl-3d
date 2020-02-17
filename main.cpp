@@ -44,8 +44,9 @@ int main(int argc, char* argv[])
 	SDL_Window* window = SDL_CreateWindow("myapp", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 	SDL_GLContext GLContext = SDL_GL_CreateContext(window);
 
-	Camera camera(vec3(0, 0, -3), 70.0f, (float)800 / 600, 0.01f, 1000.0f);
-	mat4 camera_perspective = camera.GetViewProjection();
+	Camera camera(vec3(0, 0, -3), 70.0f, 800.0f / 600.0f, 0.01f, 100.0f);
+	mat4 camera_view = camera.GetViewProjection();
+	mat4 camera_perspective = camera.returnperspective();
 
 	
 	glewExperimental = GL_TRUE;
@@ -61,13 +62,13 @@ int main(int argc, char* argv[])
 
 	float Vertices[]
 	{
-		0.7f,0.5f,0.1f,
+		/*0.7f,0.5f,0.1f,
 		0.7f,-0.7f,0.0f,
-		-0.7f,-0.7f,0.0f,
+		-0.7f,-0.7f,0.0f,*/
 
-		0.0f,0.5f,0.1f,
-		0.3f,-0.7f,0.0f,
-		1.0f,0.5f,0.8f
+		0.0f,0.5f,0.0f,
+		0.5f,-0.5f,0.0f,
+		-0.5f,-0.5f,0.0f
 	};
 
 	GLuint VertexBufferObject = 0;
@@ -87,10 +88,12 @@ int main(int argc, char* argv[])
 	const char* VertexShaderCode =
 		"#version 450\n"
 		"in vec3 vp;"
+		"uniform mat4 view;"
 		"uniform mat4 perspective;"
 		"uniform mat4 model;"
 		"void main(){"
-		"  gl_Position = perspective*model*vec4(vp,1.0);"
+		"  gl_Position = perspective*view*model*vec4(vp,1.0);"
+		//"  gl_Position = view*model*vec4(vp,1.0);"
 		"}";
 	const char* FragmentShaderCode =
 		"#version 450\n"
@@ -122,6 +125,11 @@ int main(int argc, char* argv[])
 	glClearColor(0.0f, 0.15f, 0.3f, 1.0f);
 	glViewport(0, 0, 800, 600);
 
+
+	Tri1.transform.setscale(vec3(1));
+	Tri1.transform.setpos(vec3(0.1, 0.3, 0));
+	//Tri1.transform.setrot(vec3(3, 3, 3));
+
 	while (true)
 	{
 		//glClearColor(0.0f, 0.15f, 0.3f, 1.0f);
@@ -131,6 +139,9 @@ int main(int argc, char* argv[])
 
 		GLint perspectiveLoc = glGetUniformLocation(ShaderPrograme, "perspective");
 		glUniformMatrix4fv(perspectiveLoc, 1, GL_FALSE, &camera_perspective[0][0]);
+		
+		GLint viewLoc = glGetUniformLocation(ShaderPrograme, "view");
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &camera_view[0][0]);
 
 		
 		GLint modelLoc = glGetUniformLocation(ShaderPrograme, "model");
@@ -138,9 +149,7 @@ int main(int argc, char* argv[])
 
 		
 		
-		Tri1.transform.setscale(vec3(1));
-		Tri1.transform.setpos(vec3(0.1,0.3,0));
-		Tri1.transform.setrot(vec3(3,3,3));
+		
 		
 		//glDrawArrays(GL_TRIANGLES, 0, 6);
 
