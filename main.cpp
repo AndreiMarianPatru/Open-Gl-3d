@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
 	SDL_Window* window = SDL_CreateWindow("myapp", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 	SDL_GLContext GLContext = SDL_GL_CreateContext(window);
 
-	Camera camera(vec3(0, 0, -3), 70.0f, 800.0f / 600.0f, 0.01f, 100.0f);
+	Camera camera(vec3(0, 0, -2), 70.0f, 800.0f / 600.0f, 0.01f, 100.0f);
 	mat4 camera_view = camera.GetViewProjection();
 	mat4 camera_perspective = camera.returnperspective();
 
