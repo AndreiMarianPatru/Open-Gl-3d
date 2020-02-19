@@ -12,26 +12,30 @@ class Camera
 	vec3 m_right;
 	vec3 m_up;
 public:
+	Transform cameraTransform;
 	
-	Camera( vec3 pos,float fov,float aspect, float zNear,float zFar)
+	Camera(float fov,float aspect, float zNear,float zFar)
 {
-
-		
+		cameraTransform.setpos(vec3(0,0,-3));
 		m_perspective = glm::perspective(fov, aspect, zNear, zFar);
-		m_position = pos;
-		m_forward = normalize(vec3(0) - m_position);
-		m_right = normalize(cross(vec3(0, 1, 0), m_forward));
-		m_up = normalize(cross(m_forward, m_right));
+		
+		
+		
 		
 }
 	~Camera(){};
 	mat4 returnperspective()
 	{
+		
 		return m_perspective;
 	}
 
-	inline mat4 GetViewProjection() const
-	{		
+	inline mat4 GetViewProjection()
+	{
+		m_position = cameraTransform.getpos();
+		m_forward = normalize(vec3(0) - m_position);
+		m_right = normalize(cross(vec3(0, 1, 0), m_forward));
+		m_up = normalize(cross(m_forward, m_right));
 		return  glm::lookAt(m_position, vec3(0), m_up);
 	}
 	

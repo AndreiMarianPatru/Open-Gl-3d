@@ -44,8 +44,8 @@ int main(int argc, char* argv[])
 	SDL_Window* window = SDL_CreateWindow("myapp", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 	SDL_GLContext GLContext = SDL_GL_CreateContext(window);
 
-	Camera camera(vec3(0, 0, -2), 70.0f, 800.0f / 600.0f, 0.01f, 100.0f);
-	mat4 camera_view = camera.GetViewProjection();
+	Camera camera( 70.0f, 800.0f / 600.0f, 0.01f, 100.0f);
+
 	mat4 camera_perspective = camera.returnperspective();
 
 	
@@ -60,21 +60,23 @@ int main(int argc, char* argv[])
 	}
 
 
-	float Vertices[]
+	float Vertices1[]
 	{
-		/*0.7f,0.5f,0.1f,
-		0.7f,-0.7f,0.0f,
-		-0.7f,-0.7f,0.0f,*/
-
 		0.0f,0.5f,0.0f,
 		0.5f,-0.5f,0.0f,
 		-0.5f,-0.5f,0.0f
+	};
+	float Vertices2[]
+	{
+		0.7f,0.5f,0.1f,
+		0.7f,-0.7f,0.0f,
+		-0.7f,-0.7f,0.0f,
 	};
 
 	GLuint VertexBufferObject = 0;
 	glGenBuffers(1, &VertexBufferObject);
 	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferObject);
-	glBufferData(GL_ARRAY_BUFFER, 18 * sizeof(float), Vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), Vertices1, GL_STATIC_DRAW);
 
 	GLuint VertexArrayObject = 0;
 	glGenVertexArrays(1, &VertexArrayObject);
@@ -120,7 +122,7 @@ int main(int argc, char* argv[])
 	glValidateProgram(ShaderPrograme);
 	CheckShaderError(ShaderPrograme, GL_VALIDATE_STATUS, true, "err program is invalid ");
 
-	Mesh Tri1(Vertices, 3);
+	Mesh Tri1(Vertices1, 3);
 	
 	glClearColor(0.0f, 0.15f, 0.3f, 1.0f);
 	glViewport(0, 0, 800, 600);
@@ -132,10 +134,49 @@ int main(int argc, char* argv[])
 
 	while (true)
 	{
+		SDL_Event event;
+		while (SDL_PollEvent(&event))
+		{
+			
+			//User presses a key
+			if (event.type == SDL_KEYDOWN)
+			{
+				//Select surfaces based on key press
+				switch (event.key.keysym.sym)
+				{
+				case SDLK_w:
+					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(0,1,0));
+					break;
+				case SDLK_s:
+					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(0, -1, 0));
+					break;
+				case SDLK_a:
+					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(1, 0, 0));
+					break;
+				case SDLK_d:
+					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(-1, 0, 0));
+					break;
+				case SDLK_q:
+					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(0, 0, 1));
+					break;
+				case SDLK_e:
+					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(0, 0, -1));
+					break;
+				}
+
+			}
+			
+		}
+		
 		//glClearColor(0.0f, 0.15f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(ShaderPrograme);
 		glBindVertexArray(VertexArrayObject);
+
+		
+		
+		mat4 camera_view = camera.GetViewProjection();
+
 
 		GLint perspectiveLoc = glGetUniformLocation(ShaderPrograme, "perspective");
 		glUniformMatrix4fv(perspectiveLoc, 1, GL_FALSE, &camera_perspective[0][0]);
