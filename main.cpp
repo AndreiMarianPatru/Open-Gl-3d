@@ -68,9 +68,9 @@ int main(int argc, char* argv[])
 	};
 	float Vertices2[]
 	{
-		0.7f,0.5f,0.1f,
-		0.7f,-0.7f,0.0f,
-		-0.7f,-0.7f,0.0f,
+		1.0f,0.5f,0.0f,
+		1.5f,-0.5f,0.0f,
+		0.5f,-0.5f,0.0f
 	};
 
 	GLuint VertexBufferObject = 0;
@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
 		"#version 450\n"
 		"out vec4 frag_colour;"
 		"void main(){"
-		"frag_colour=vec4(0.7,0.0,0.1,1.0);"//colour of triangle
+		"frag_colour=vec4(0.6,0.0,0.5,1.0);"//colour of triangle
 		"}";
 
 	GLuint VertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -123,6 +123,8 @@ int main(int argc, char* argv[])
 	CheckShaderError(ShaderPrograme, GL_VALIDATE_STATUS, true, "err program is invalid ");
 
 	Mesh Tri1(Vertices1, 3);
+	Mesh Tri2(Vertices2, 3);
+
 	
 	glClearColor(0.0f, 0.15f, 0.3f, 1.0f);
 	glViewport(0, 0, 800, 600);
@@ -130,7 +132,8 @@ int main(int argc, char* argv[])
 
 	Tri1.transform.setscale(vec3(1));
 	Tri1.transform.setpos(vec3(0.1, 0.3, 0));
-	//Tri1.transform.setrot(vec3(3, 3, 3));
+	Tri2.transform.setscale(vec3(1));
+	Tri2.transform.setpos(vec3(0.1, 0.3, 0));
 
 	while (true)
 	{
@@ -195,6 +198,7 @@ int main(int argc, char* argv[])
 		//glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		Tri1.Draw();
+		Tri2.Draw();
 		//glViewport(0, 0, 800, 600);
 		SDL_Delay(16);
 		SDL_GL_SwapWindow(window);
