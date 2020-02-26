@@ -135,6 +135,8 @@ int main(int argc, char* argv[])
 	Tri2.transform.setscale(vec3(1));
 	Tri2.transform.setpos(vec3(0.1, 0.3, 0));
 
+	vec3 viewvec;
+	viewvec = vec3(0, 0, 0);
 	while (true)
 	{
 		SDL_Event event;
@@ -149,15 +151,20 @@ int main(int argc, char* argv[])
 				{
 				case SDLK_w:
 					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(0,1,0));
+					viewvec.y += 1;
 					break;
 				case SDLK_s:
 					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(0, -1, 0));
+					viewvec.y -= 1;
 					break;
 				case SDLK_a:
 					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(1, 0, 0));
+					viewvec.x += 1;
 					break;
 				case SDLK_d:
 					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(-1, 0, 0));
+					viewvec.x -= 1;
+
 					break;
 				case SDLK_q:
 					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(0, 0, 1));
@@ -178,7 +185,7 @@ int main(int argc, char* argv[])
 
 		
 		
-		mat4 camera_view = camera.GetViewProjection();
+		mat4 camera_view = camera.GetViewProjection(viewvec);
 
 
 		GLint perspectiveLoc = glGetUniformLocation(ShaderPrograme, "perspective");

@@ -30,13 +30,13 @@ public:
 		return m_perspective;
 	}
 
-	inline mat4 GetViewProjection()
+	inline mat4 GetViewProjection(vec3 myvec)
 	{
 		m_position = cameraTransform.getpos();
 		m_forward = normalize(vec3(0) - m_position);
 		m_right = normalize(cross(vec3(0, 1, 0), m_forward));
 		m_up = normalize(cross(m_forward, m_right));
-		return  glm::lookAt(m_position, vec3(0), m_up);
+		return  glm::lookAt(m_position, myvec, m_up);
 	}
 	
 	
