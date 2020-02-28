@@ -7,6 +7,9 @@
 #include <iostream>
 #include "mesh.h"
 #include "Camera.h"
+#include "Vertex.h"
+#include <vector>
+#include "mesh_ind.h"
 
 
 using namespace std;
@@ -79,6 +82,19 @@ int main(int argc, char* argv[])
 		0.5f,-0.5f,5.0f
 	};
 
+
+
+	vector<Vertex> SquareVertices;
+
+	SquareVertices.push_back(Vertex(-0.5f, 1.5f, 0.0f));
+	SquareVertices.push_back(Vertex(0.5f, 1.5f, 0.0f));
+	SquareVertices.push_back(Vertex(0.5f, 0.5f, 0.0f));
+	SquareVertices.push_back(Vertex(-0.5f, 0.5f, 0.0f));
+	unsigned int SquareIndecies[]
+	{
+		0,1,2,0,2,3
+	};
+
 	GLuint VertexBufferObject = 0;
 	glGenBuffers(1, &VertexBufferObject);
 	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferObject);
@@ -145,6 +161,10 @@ int main(int argc, char* argv[])
 	Tri3.transform.setscale(vec3(1));
 	Tri3.transform.setpos(vec3(0.1, 0.3, 0));
 
+
+	Mesh_ind square(&SquareVertices[0],SquareVertices.size(),&SquareIndecies[0],6);
+	square.transform.setscale(vec3(1));
+
 	vec3 viewvec;
 	viewvec = vec3(0, 0, 0);
 	while (true)
@@ -186,24 +206,24 @@ int main(int argc, char* argv[])
 					viewvec.z -= 1;
 					break;
 				case SDLK_LEFT:
-					viewvec.x+=5;
+					viewvec.x+=2;
 					
 					break;
 				case SDLK_RIGHT:
-					viewvec.x-=5;									
+					viewvec.x-=2;									
 					break;
 				case SDLK_UP:
-					viewvec.y-=5;
+					viewvec.y-=2;
 					break;
 				case SDLK_DOWN:
-					viewvec.x-=5;
+					viewvec.x-=2;
 				}
 
 			}
 			
 		}
 		
-		//glClearColor(0.0f, 0.15f, 0.3f, 1.0f);
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(ShaderPrograme);
 		glBindVertexArray(VertexArrayObject);
@@ -232,6 +252,7 @@ int main(int argc, char* argv[])
 		Tri1.Draw();
 		Tri2.Draw();
 		Tri3.Draw();
+		square.Draw();
 
 		SDL_Delay(16);
 		SDL_GL_SwapWindow(window);
