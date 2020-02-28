@@ -1,16 +1,9 @@
 ﻿  Camera.cpp
   main.cpp
-  mesh.cpp
-  Transform.cpp
+C:\Users\Andrei\Desktop\New folder\graphics\main.cpp(178,71): error C3867: 'Camera::retrunUP': non-standard syntax; use '&' to create a pointer to member
+C:\Users\Andrei\Desktop\New folder\graphics\main.cpp(178,31): error C2672: 'glm::rotate': no matching overloaded function found
+C:\Users\Andrei\Desktop\New folder\graphics\main.cpp(178,71): error C2780: 'glm::qua<T,Q> glm::rotate(const glm::qua<T,Q> &,const T &,const glm::vec<3,T,Q> &)': expects 3 arguments - 2 provided
+C:\Users\Andrei\Desktop\New folder\graphics\libs\glm\glm\ext\quaternion_transform.hpp(43): message : see declaration of 'glm::rotate'
+C:\Users\Andrei\Desktop\New folder\graphics\main.cpp(178,71): error C2780: 'glm::mat<4,4,T,Q> glm::rotate(const glm::mat<4,4,T,Q> &,T,const glm::vec<3,T,Q> &)': expects 3 arguments - 2 provided
+C:\Users\Andrei\Desktop\New folder\graphics\libs\glm\glm\ext\matrix_transform.hpp(80): message : see declaration of 'glm::rotate'
   Generating Code...
-LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
-LINK : warning LNK4286: symbol '___glewBindBuffer' defined in 'glew32s.lib(glew.obj)' is imported by 'mesh.obj'
-LINK : warning LNK4286: symbol '___glewBufferData' defined in 'glew32s.lib(glew.obj)' is imported by 'mesh.obj'
-LINK : warning LNK4286: symbol '___glewGenBuffers' defined in 'glew32s.lib(glew.obj)' is imported by 'mesh.obj'
-LINK : warning LNK4286: symbol '___glewEnableVertexAttribArray' defined in 'glew32s.lib(glew.obj)' is imported by 'mesh.obj'
-LINK : warning LNK4286: symbol '___glewVertexAttribPointer' defined in 'glew32s.lib(glew.obj)' is imported by 'mesh.obj'
-LINK : warning LNK4286: symbol '___glewBindVertexArray' defined in 'glew32s.lib(glew.obj)' is imported by 'mesh.obj'
-LINK : warning LNK4286: symbol '___glewDeleteVertexArrays' defined in 'glew32s.lib(glew.obj)' is imported by 'mesh.obj'
-LINK : warning LNK4286: symbol '___glewGenVertexArrays' defined in 'glew32s.lib(glew.obj)' is imported by 'mesh.obj'
-glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'C:\Users\Andrei-Marian\Desktop\graphics\Graphics\Debug\vc120.pdb'; linking object as if no debug info
-  Graphics.vcxproj -> C:\Users\Andrei-Marian\Desktop\graphics\Graphics\Debug\Graphics.exe

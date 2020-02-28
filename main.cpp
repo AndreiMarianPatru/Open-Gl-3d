@@ -150,27 +150,33 @@ int main(int argc, char* argv[])
 				switch (event.key.keysym.sym)
 				{
 				case SDLK_w:
-					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(0,1,0));
-					viewvec.y += 1;
-					break;
-				case SDLK_s:
-					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(0, -1, 0));
+					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(0,-1,0));
 					viewvec.y -= 1;
 					break;
-				case SDLK_a:
-					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(1, 0, 0));
-					viewvec.x += 1;
+				case SDLK_s:
+					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(0, 1, 0));
+					viewvec.y += 1;
 					break;
-				case SDLK_d:
+				case SDLK_a:
 					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(-1, 0, 0));
 					viewvec.x -= 1;
+					break;
+				case SDLK_d:
+					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(1, 0, 0));
+					viewvec.x += 1;
 
 					break;
 				case SDLK_q:
 					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(0, 0, 1));
+					viewvec.z += 1;
 					break;
 				case SDLK_e:
 					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(0, 0, -1));
+					viewvec.z -= 1;
+					break;
+				case SDLK_LEFT:
+					viewvec = glm::mat3(glm::rotate(10,camera.retrunUP)) * viewvec;
+					
 					break;
 				}
 
@@ -202,11 +208,11 @@ int main(int argc, char* argv[])
 		
 		
 		
-		//glDrawArrays(GL_TRIANGLES, 0, 6);
+	
 
 		Tri1.Draw();
 		Tri2.Draw();
-		//glViewport(0, 0, 800, 600);
+
 		SDL_Delay(16);
 		SDL_GL_SwapWindow(window);
 
