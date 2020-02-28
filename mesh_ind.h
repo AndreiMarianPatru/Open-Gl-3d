@@ -17,7 +17,13 @@ public:
 	~Mesh_ind();	
 	void PrintPosition();
 private:
-	GLuint m_vertexBufferObjects[2] ;
+	
+	enum {
+		Position_VB,
+		Index_VB,
+		Num_Buffers
+	};
+	GLuint m_vertexBufferObjects[Num_Buffers];
 	GLuint m_vertexArrayObject = 0;
 };
 
