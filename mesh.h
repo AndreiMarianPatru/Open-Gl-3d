@@ -11,6 +11,7 @@ public:
 	void Draw();
 	~Mesh();
 	Transform transform;
+	void PrintPosition();
 private:
 	GLuint m_vertexBufferObject = 0;
 	GLuint m_vertexArrayObject = 0;

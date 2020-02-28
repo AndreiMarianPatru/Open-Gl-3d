@@ -1,9 +1,2 @@
-﻿  Camera.cpp
-  main.cpp
-C:\Users\Andrei\Desktop\New folder\graphics\main.cpp(178,71): error C3867: 'Camera::retrunUP': non-standard syntax; use '&' to create a pointer to member
-C:\Users\Andrei\Desktop\New folder\graphics\main.cpp(178,31): error C2672: 'glm::rotate': no matching overloaded function found
-C:\Users\Andrei\Desktop\New folder\graphics\main.cpp(178,71): error C2780: 'glm::qua<T,Q> glm::rotate(const glm::qua<T,Q> &,const T &,const glm::vec<3,T,Q> &)': expects 3 arguments - 2 provided
-C:\Users\Andrei\Desktop\New folder\graphics\libs\glm\glm\ext\quaternion_transform.hpp(43): message : see declaration of 'glm::rotate'
-C:\Users\Andrei\Desktop\New folder\graphics\main.cpp(178,71): error C2780: 'glm::mat<4,4,T,Q> glm::rotate(const glm::mat<4,4,T,Q> &,T,const glm::vec<3,T,Q> &)': expects 3 arguments - 2 provided
-C:\Users\Andrei\Desktop\New folder\graphics\libs\glm\glm\ext\matrix_transform.hpp(80): message : see declaration of 'glm::rotate'
-  Generating Code...
+﻿  main.cpp
+  Graphics.vcxproj -> C:\Users\Andrei-Marian\Desktop\graphics\Graphics\Debug\Graphics.exe

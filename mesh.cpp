@@ -1,4 +1,5 @@
 #include "mesh.h"
+#include <iostream>
 
 Mesh::Mesh(float* verts, unsigned vertCount)
 {
@@ -25,5 +26,10 @@ void Mesh::Draw()
 Mesh::~Mesh()
 {
 	glDeleteVertexArrays(1, &m_vertexArrayObject);
+}
+
+void Mesh::PrintPosition()
+{
+	std::cout<<"x: "<<transform.getpos().x<<" "<<"y: "<<transform.getpos().y<<" "<<"z: "<<transform.getpos().z<<std::endl;
 }
 

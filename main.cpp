@@ -41,10 +41,10 @@ int main(int argc, char* argv[])
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 
-	SDL_Window* window = SDL_CreateWindow("myapp", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+	SDL_Window* window = SDL_CreateWindow("myapp", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 1000, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 	SDL_GLContext GLContext = SDL_GL_CreateContext(window);
 
-	Camera camera( 70.0f, 800.0f / 600.0f, 0.01f, 100.0f);
+	Camera camera( 70.0f, 1000.0f / 1000.0f, 0.01f, 1000.0f);
 
 	mat4 camera_perspective = camera.returnperspective();
 
@@ -64,13 +64,19 @@ int main(int argc, char* argv[])
 	{
 		0.0f,0.5f,0.0f,
 		0.5f,-0.5f,0.0f,
-		-0.5f,-0.5f,0.0f
+		-1.5f,-0.5f,0.0f
 	};
 	float Vertices2[]
 	{
-		1.0f,0.5f,0.0f,
-		1.5f,-0.5f,0.0f,
-		0.5f,-0.5f,0.0f
+		1.0f,0.5f,2.5f,
+		1.5f,-0.5f,2.5f,
+		-0.5f,-0.5f,2.5f
+	};
+	float Vertices3[]
+	{
+		2.0f,0.5f,5.0f,
+		2.5f,-0.5f,5.0f,
+		0.5f,-0.5f,5.0f
 	};
 
 	GLuint VertexBufferObject = 0;
@@ -124,21 +130,26 @@ int main(int argc, char* argv[])
 
 	Mesh Tri1(Vertices1, 3);
 	Mesh Tri2(Vertices2, 3);
+	Mesh Tri3(Vertices3,3);
+	
 
 	
 	glClearColor(0.0f, 0.15f, 0.3f, 1.0f);
-	glViewport(0, 0, 800, 600);
+	glViewport(0, 0, 1000, 1000);
 
 
 	Tri1.transform.setscale(vec3(1));
 	Tri1.transform.setpos(vec3(0.1, 0.3, 0));
 	Tri2.transform.setscale(vec3(1));
 	Tri2.transform.setpos(vec3(0.1, 0.3, 0));
+	Tri3.transform.setscale(vec3(1));
+	Tri3.transform.setpos(vec3(0.1, 0.3, 0));
 
 	vec3 viewvec;
 	viewvec = vec3(0, 0, 0);
 	while (true)
 	{
+		//std::cout<<camera.retrunUP().x<<" "<<camera.retrunUP().y<<" "<<camera.retrunUP().y<<std::endl;
 		SDL_Event event;
 		while (SDL_PollEvent(&event))
 		{
@@ -175,9 +186,17 @@ int main(int argc, char* argv[])
 					viewvec.z -= 1;
 					break;
 				case SDLK_LEFT:
-					viewvec = glm::mat3(glm::rotate(10,camera.retrunUP)) * viewvec;
+					viewvec.x+=5;
 					
 					break;
+				case SDLK_RIGHT:
+					viewvec.x-=5;									
+					break;
+				case SDLK_UP:
+					viewvec.y-=5;
+					break;
+				case SDLK_DOWN:
+					viewvec.x-=5;
 				}
 
 			}
@@ -212,6 +231,7 @@ int main(int argc, char* argv[])
 
 		Tri1.Draw();
 		Tri2.Draw();
+		Tri3.Draw();
 
 		SDL_Delay(16);
 		SDL_GL_SwapWindow(window);
