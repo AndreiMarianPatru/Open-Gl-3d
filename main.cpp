@@ -121,9 +121,11 @@ int main(int argc, char* argv[])
 		"}";
 	const char* FragmentShaderCode =
 		"#version 450\n"
+		"uniform vec3 Color;"
 		"out vec4 frag_colour;"
 		"void main(){"
-		"frag_colour=vec4(0.6,0.0,0.5,1.0);"//colour of triangle
+		//"frag_colour=vec4(0.6,0.0,0.5,1.0);"//colour of triangle
+		"frag_colour=vec4(Color,1.0);"//colour of triangle
 		"}";
 
 	GLuint VertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -242,6 +244,15 @@ int main(int argc, char* argv[])
 		
 		GLint modelLoc = glGetUniformLocation(ShaderPrograme, "model");
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &Tri1.transform.GetModel()[0][0]);
+
+
+		GLint ColorLoc = glGetUniformLocation(ShaderPrograme, "Color");
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &Tri1.transform.GetModel()[0][0]);
+		vec3 color = vec3(1.0f,1.0f,0.0f);
+		glUniform3f(ColorLoc, color.x, color.y, color.z);
+		
+
+		
 
 		
 		
