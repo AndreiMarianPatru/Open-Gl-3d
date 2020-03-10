@@ -11,6 +11,7 @@ class Camera
 	vec3 m_forward;
 	vec3 m_right;
 	vec3 m_up;
+	vec3 viewvec;
 public:
 	Transform cameraTransform;
 	
@@ -29,14 +30,17 @@ public:
 		
 		return m_perspective;
 	}
-
-	inline mat4 GetViewProjection(vec3 myvec)
+	void setviewvec(vec3 newvec) 
+	{
+		viewvec = newvec;
+	}
+    inline mat4 GetViewProjection()
 	{
 		m_position = cameraTransform.getpos();
 		m_forward = normalize(vec3(0) - m_position);
 		m_right = normalize(cross(vec3(0, 1, 0), m_forward));
 		m_up = normalize(cross(m_forward, m_right));
-		return  glm::lookAt(m_position, myvec, m_up);
+		return  glm::lookAt(m_position, viewvec, m_up);
 	}
 	void RotateY(float amount) 
 	{
