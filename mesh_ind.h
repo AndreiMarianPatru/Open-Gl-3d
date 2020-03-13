@@ -8,6 +8,15 @@
 class Mesh_ind
 {
 public:
+	unsigned int* _indices;
+	enum VertexBuffers
+	{
+		POSITION_VB,
+		TEXCOORD_VB,
+		INDEX_VB,
+		NUM_BUFFERS
+	};
+	
 	Transform transform;
 	int m_drawCount;
 
@@ -18,12 +27,13 @@ public:
 	void PrintPosition();
 private:
 	
-	enum {
+	/*enum {
 		Position_VB,
+		TextCoords_VB,
 		Index_VB,
 		Num_Buffers
-	};
-	GLuint m_vertexBufferObjects[Num_Buffers];
+	};*/
+	GLuint m_vertexBufferObjects[NUM_BUFFERS];
 	GLuint m_vertexArrayObject = 0;
 };
 

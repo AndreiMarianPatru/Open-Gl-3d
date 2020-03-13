@@ -9,13 +9,14 @@
 using namespace std;
 class Shader
 {
+public:
 	enum ShaderTypes
 	{
 		VERTEX,
 		FRAGMENT,
 		NUM_SHADER_TYPES
 	};
-	enum UniformNAmes
+	enum UniformNames
 	{
 		MODEL_U,
 		PROJECTION_U,
@@ -26,7 +27,7 @@ class Shader
 	~Shader();
 	void Update(Transform& transform);
 	void Bind();
-	
+	GLuint GetProgram();
 private:
 	string Name;
 	GLuint m_Program;

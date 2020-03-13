@@ -5,11 +5,16 @@
 #include<glm/gtc/type_ptr.hpp>
 #include<SDL.h>
 #include <iostream>
+#include <vector>
+
 #include "mesh.h"
 #include "Camera.h"
 #include "Vertex.h"
-#include <vector>
 #include "mesh_ind.h"
+#include "Shader.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 
 
 using namespace std;
@@ -32,6 +37,37 @@ void CheckShaderError(GLuint shader, GLuint flag, bool isProgram, const string& 
 	}
 }
 
+
+GLuint textureID;
+
+void LoadTexture(string TextureLocation) 
+{
+	int width, height, numComponents;
+	unsigned char* ImageData = stbi_load(TextureLocation.c_str(), &width, &height, &numComponents, STBI_rgb_alpha);
+	if (ImageData == NULL)
+	{
+		cerr << "texture loading failed for texture: " << TextureLocation << endl;
+	}
+	else
+	{
+		cerr << "ok" << endl;
+	}
+	GLenum format;
+	if (numComponents == 1)
+		format = GL_RED;
+	if (numComponents == 3)
+		format = GL_RGB;
+	if (numComponents == 4)
+		format = GL_RGBA;
+	glGenTextures(1, &textureID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ImageData);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	stbi_image_free(ImageData);
+}
 int main(int argc, char* argv[])
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
@@ -51,7 +87,9 @@ int main(int argc, char* argv[])
 
 	mat4 camera_perspective = camera.returnperspective();
 
+
 	
+
 	glewExperimental = GL_TRUE;
 	GLenum status = glewInit();
 	glEnable(GL_DEPTH_TEST);
@@ -86,10 +124,10 @@ int main(int argc, char* argv[])
 
 	vector<Vertex> SquareVertices;
 
-	SquareVertices.push_back(Vertex(-0.5f, 1.5f, 0.0f));
-	SquareVertices.push_back(Vertex(0.5f, 1.5f, 0.0f));
-	SquareVertices.push_back(Vertex(0.5f, 0.5f, 0.0f));
-	SquareVertices.push_back(Vertex(-0.5f, 0.5f, 0.0f));
+	SquareVertices.push_back(Vertex(vec3(-0.5f, 0.5f, 1.0f),vec2(0,0)));
+	SquareVertices.push_back(Vertex(vec3(0.5f, 0.5f, 1.0f),vec2(1,0)));
+	SquareVertices.push_back(Vertex(vec3(0.5f, -0.5f, 1.0f),vec2(1,1)));
+	SquareVertices.push_back(Vertex(vec3(-0.5f, -0.5f, 1.0f),vec2(0,1)));
 	unsigned int SquareIndecies[]
 	{
 		0,1,2,0,2,3
@@ -109,46 +147,12 @@ int main(int argc, char* argv[])
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 	glBindVertexArray(0);
 
-	const char* VertexShaderCode =
-		"#version 450\n"
-		"in vec3 vp;"
-		"uniform mat4 view;"
-		"uniform mat4 perspective;"
-		"uniform mat4 model;"
-		"void main(){"
-		"  gl_Position = perspective*view*model*vec4(vp,1.0);"
-		//"  gl_Position = view*model*vec4(vp,1.0);"
-		"}";
-	const char* FragmentShaderCode =
-		"#version 450\n"
-		"uniform vec3 Color;"
-		"out vec4 frag_colour;"
-		"void main(){"
-		//"frag_colour=vec4(0.6,0.0,0.5,1.0);"//colour of triangle
-		"frag_colour=vec4(Color,1.0);"//colour of triangle
-		"}";
-
-	GLuint VertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(VertexShader, 1, &VertexShaderCode, NULL);
-	glCompileShader(VertexShader);
-
-	GLuint FragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(FragmentShader, 1, &FragmentShaderCode, NULL);
-	glCompileShader(FragmentShader);
-
-	GLuint ShaderPrograme = glCreateProgram();
-	glAttachShader(ShaderPrograme, VertexShader);
-	glAttachShader(ShaderPrograme, FragmentShader);
-
-	glLinkProgram(ShaderPrograme);
-
-	CheckShaderError(ShaderPrograme, GL_LINK_STATUS, true, "err program linking failed: ");
-	glValidateProgram(ShaderPrograme);
-	CheckShaderError(ShaderPrograme, GL_VALIDATE_STATUS, true, "err program is invalid ");
+	
+	Shader* basicShader = new Shader("resources/Basic", camera);
 
 	Mesh Tri1(Vertices1, 3);
-	Mesh Tri2(Vertices2, 3);
-	Mesh Tri3(Vertices3,3);
+	/*Mesh_ind Tri2(Vertices2, 3);
+	Mesh_ind Tri3(Vertices3,3);*/
 	
 
 	
@@ -156,19 +160,21 @@ int main(int argc, char* argv[])
 	glViewport(0, 0, 1000, 1000);
 
 
-	Tri1.transform.setscale(vec3(1));
-	Tri1.transform.setpos(vec3(0.1, 0.3, 0));
+	Tri1.transform.setpos(vec3(1, 0.4f, -1.0f));
+	Tri1.transform.setscale(vec3(2));
+	/*Tri3.transform.setscale(vec3(2));
 	Tri2.transform.setscale(vec3(1));
 	Tri2.transform.setpos(vec3(0.1, 0.3, 0));
 	Tri3.transform.setscale(vec3(1));
 	Tri3.transform.setpos(vec3(0.1, 0.3, 0));
-
+*/
 
 	Mesh_ind square(&SquareVertices[0],SquareVertices.size(),&SquareIndecies[0],6);
 	square.transform.setscale(vec3(1));
 
 	vec3 viewvec;
 	viewvec = vec3(0, 0, 0);
+	
 	while (true)
 	{
 		//std::cout<<camera.retrunUP().x<<" "<<camera.retrunUP().y<<" "<<camera.retrunUP().y<<std::endl;
@@ -182,6 +188,7 @@ int main(int argc, char* argv[])
 				//Select surfaces based on key press
 				switch (event.key.keysym.sym)
 				{
+					//camera movement
 				case SDLK_w:
 					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(0,-1,0));
 					viewvec.y -= 1;
@@ -199,6 +206,7 @@ int main(int argc, char* argv[])
 					viewvec.x += 1;
 
 					break;
+					//camera movement(zoom)
 				case SDLK_q:
 					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(0, 0, 1));
 					viewvec.z += 1;
@@ -207,6 +215,7 @@ int main(int argc, char* argv[])
 					camera.cameraTransform.setpos(camera.cameraTransform.getpos() + vec3(0, 0, -1));
 					viewvec.z -= 1;
 					break;
+				//camera rotation
 				case SDLK_LEFT:
 					viewvec.x+=2;
 					
@@ -226,44 +235,42 @@ int main(int argc, char* argv[])
 		}
 		
 
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glUseProgram(ShaderPrograme);
+
 		glBindVertexArray(VertexArrayObject);
-
+		LoadTexture("brickwall.jpg");
 		
 		
-		mat4 camera_view = camera.GetViewProjection(viewvec);
+		camera.setviewvec(viewvec);
+		mat4 camera_view = camera.GetViewProjection();
 
-
-		GLint perspectiveLoc = glGetUniformLocation(ShaderPrograme, "perspective");
-		glUniformMatrix4fv(perspectiveLoc, 1, GL_FALSE, &camera_perspective[0][0]);
+		basicShader->Bind();		
 		
-		GLint viewLoc = glGetUniformLocation(ShaderPrograme, "view");
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &camera_view[0][0]);
-
 		
-		GLint modelLoc = glGetUniformLocation(ShaderPrograme, "model");
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &Tri1.transform.GetModel()[0][0]);
-
-
-		GLint ColorLoc = glGetUniformLocation(ShaderPrograme, "Color");
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &Tri1.transform.GetModel()[0][0]);
-		vec3 color = vec3(1.0f,1.0f,0.0f);
-		glUniform3f(ColorLoc, color.x, color.y, color.z);
-		
-
-		
+		glActiveTexture(GL_TEXTURE0);
+		GLuint TextureLoc = glGetUniformLocation(basicShader->GetProgram(), "texture_diffuse");
+		glUniform1i(TextureLoc, 0);
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		basicShader->Update(square.transform);
 
 		
 		
 		
-		
-	
-
-		Tri1.Draw();
-		Tri2.Draw();
-		Tri3.Draw();
+		//Tri1.Draw();
 		square.Draw();
+
+		
+		/*Tri2.Draw();
+		Tri3.Draw();*/
+
+	
+		
+
+
+
+		glUseProgram(0);
+
 
 		SDL_Delay(16);
 		SDL_GL_SwapWindow(window);
