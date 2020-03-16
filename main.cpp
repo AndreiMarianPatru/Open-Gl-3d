@@ -48,10 +48,6 @@ void LoadTexture(string TextureLocation)
 	{
 		cerr << "texture loading failed for texture: " << TextureLocation << endl;
 	}
-	else
-	{
-		cerr << "ok" << endl;
-	}
 	GLenum format;
 	if (numComponents == 1)
 		format = GL_RED;
@@ -60,6 +56,7 @@ void LoadTexture(string TextureLocation)
 	if (numComponents == 4)
 		format = GL_RGBA;
 	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D,textureID);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -174,6 +171,9 @@ int main(int argc, char* argv[])
 
 	vec3 viewvec;
 	viewvec = vec3(0, 0, 0);
+
+	LoadTexture("brickwall.jpg");
+
 	
 	while (true)
 	{
@@ -239,7 +239,7 @@ int main(int argc, char* argv[])
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glBindVertexArray(VertexArrayObject);
-		LoadTexture("brickwall.jpg");
+		
 		
 		
 		camera.setviewvec(viewvec);
