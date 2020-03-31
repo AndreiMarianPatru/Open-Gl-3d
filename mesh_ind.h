@@ -14,6 +14,7 @@ public:
 		POSITION_VB,
 		TEXCOORD_VB,
 		INDEX_VB,
+		NORMAL_VB,
 		NUM_BUFFERS
 	};
 	

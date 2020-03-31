@@ -12,6 +12,7 @@
 #include "Vertex.h"
 #include "mesh_ind.h"
 #include "Shader.h"
+#include "LightBase.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -83,7 +84,7 @@ int main(int argc, char* argv[])
 	Camera camera( 70.0f, 1000.0f / 1000.0f, 0.01f, 1000.0f);
 
 	mat4 camera_perspective = camera.returnperspective();
-
+	LightBase* light= new LightBase();
 
 	
 
@@ -121,10 +122,10 @@ int main(int argc, char* argv[])
 
 	vector<Vertex> SquareVertices;
 
-	SquareVertices.push_back(Vertex(vec3(-0.5f, 0.5f, 1.0f),vec2(0,0)));
-	SquareVertices.push_back(Vertex(vec3(0.5f, 0.5f, 1.0f),vec2(1,0)));
-	SquareVertices.push_back(Vertex(vec3(0.5f, -0.5f, 1.0f),vec2(1,1)));
-	SquareVertices.push_back(Vertex(vec3(-0.5f, -0.5f, 1.0f),vec2(0,1)));
+	SquareVertices.push_back(Vertex(vec3(-2.0f, 0.5f, 1.0f),vec2(-2,0.5f))); // top right
+	SquareVertices.push_back(Vertex(vec3(0.5f, 0.5f, 1.0f),vec2(0.5f,0.5f))); // top left
+	SquareVertices.push_back(Vertex(vec3(0.5f, -0.5f, 1.0f),vec2(0.5f,-0.5f))); // bottom left
+	SquareVertices.push_back(Vertex(vec3(-0.5f, -0.5f, 1.0f),vec2(-0.5f,-0.5f)));// bottom right
 	unsigned int SquareIndecies[]
 	{
 		0,1,2,0,2,3
@@ -240,7 +241,7 @@ int main(int argc, char* argv[])
 
 		glBindVertexArray(VertexArrayObject);
 		
-		
+		light->Draw(&camera);
 		
 		camera.setviewvec(viewvec);
 		mat4 camera_view = camera.GetViewProjection();
@@ -252,7 +253,7 @@ int main(int argc, char* argv[])
 		GLuint TextureLoc = glGetUniformLocation(basicShader->GetProgram(), "texture_diffuse");
 		glUniform1i(TextureLoc, 0);
 		glBindTexture(GL_TEXTURE_2D, textureID);
-		basicShader->Update(square.transform);
+		basicShader->Update(square.transform,*light);
 
 		
 		
