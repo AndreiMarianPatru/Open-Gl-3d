@@ -15,7 +15,7 @@ void main()
 {
 
 FragPos= vec3(model*vec4(vp,1.0f));
-FragNormal= mat3(transpose(inverse(model)))*Normal;
+FragNormal= mat3(transpose(inverse(model)))*-Normal;
 
 FragTextureCoord=TextureCoord;
 gl_Position=projection*view*model*vec4(vp,1.0);
