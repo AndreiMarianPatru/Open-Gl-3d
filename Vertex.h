@@ -6,18 +6,25 @@ struct Vertex
 	glm::vec3 Position;
 	glm::vec2 TextureCoord;
 
-	Vertex(const float X, const float Y, const float Z) 
-	{
-		this->Position.x = X;
-		this->Position.y = Y;
-		this->Position.z = Z;
+	glm::vec3 Tangent;
+	glm::vec3 BiTangent;
 
-		TextureCoord= {0,0};
-	}
-	Vertex(const glm::vec3 position):Vertex(position.x,position.y,position.z)
+	Vertex(const Vertex &vert) 
 	{
+		this->Position.x = vert.Position.x;
+		this->Position.y = vert.Position.y;
+		this->Position.z = vert.Position.z;
+
+		TextureCoord= {vert.TextureCoord.x,vert.TextureCoord.y};
+
+		Tangent= glm::vec3(0);
+		BiTangent= glm::vec3(0);
 		
 	}
+	//Vertex(const glm::vec3 position):Vertex(position.x,position.y,position.z)
+	//{
+	//	
+	//}
 	Vertex(const glm::vec3 position, const glm::vec2 texCoord )
 	{
 		this->Position=position;

@@ -39,10 +39,11 @@ void CheckShaderError(GLuint shader, GLuint flag, bool isProgram, const string& 
 }
 
 
-GLuint textureID;
 
-void LoadTexture(string TextureLocation) 
+
+GLuint LoadTexture(string TextureLocation) 
 {
+	GLuint textureID;
 	int width, height, numComponents;
 	unsigned char* ImageData = stbi_load(TextureLocation.c_str(), &width, &height, &numComponents, STBI_rgb_alpha);
 	if (ImageData == NULL)
@@ -65,6 +66,7 @@ void LoadTexture(string TextureLocation)
 	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ImageData);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	stbi_image_free(ImageData);
+	return textureID;
 }
 int main(int argc, char* argv[])
 {
@@ -147,6 +149,8 @@ int main(int argc, char* argv[])
 
 	
 	Shader* basicShader = new Shader("resources/Basic", camera);
+	GLuint DiffuseTextureID= LoadTexture("brickwall.jpg");
+	GLuint NormalTextureID= LoadTexture("brickwall_normal.jpg");
 
 	Mesh Tri1(Vertices1, 3);
 	/*Mesh_ind Tri2(Vertices2, 3);
@@ -247,12 +251,18 @@ int main(int argc, char* argv[])
 		mat4 camera_view = camera.GetViewProjection();
 
 		basicShader->Bind();		
-		
-		
+
 		glActiveTexture(GL_TEXTURE0);
 		GLuint TextureLoc = glGetUniformLocation(basicShader->GetProgram(), "texture_diffuse");
 		glUniform1i(TextureLoc, 0);
-		glBindTexture(GL_TEXTURE_2D, textureID);
+		glBindTexture(GL_TEXTURE_2D, DiffuseTextureID);
+		
+		glActiveTexture(GL_TEXTURE1);
+		TextureLoc = glGetUniformLocation(basicShader->GetProgram(), "texture_normal");
+		glUniform1i(TextureLoc, 1);
+		glBindTexture(GL_TEXTURE_2D, NormalTextureID);
+
+
 		basicShader->Update(square.transform,*light);
 
 		

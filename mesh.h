@@ -4,6 +4,7 @@
 #include <glm\glm.hpp>
 #include <glew.h>
 #include "Transform.h"
+#include "Vertex.h"
 class Mesh
 {
 public:
@@ -12,6 +13,7 @@ public:
 	~Mesh();
 	Transform transform;
 	void PrintPosition();
+	void CalculateTangentsBitangent(Vertex* verticies,unsigned int vertCount,unsigned int *indices,unsigned int numIndices);
 private:
 	GLuint m_vertexBufferObject = 0;
 	GLuint m_vertexArrayObject = 0;

@@ -13,8 +13,10 @@ public:
 	{
 		POSITION_VB,
 		TEXCOORD_VB,
-		INDEX_VB,
+		TANGENT_VB,
+		BITANGENT_VB,
 		NORMAL_VB,
+		INDEX_VB,
 		NUM_BUFFERS
 	};
 	
@@ -26,6 +28,7 @@ public:
 	void Draw();
 	~Mesh_ind();	
 	void PrintPosition();
+	void CalculateTangentsBitangent(Vertex* verticies,unsigned int vertCount,unsigned int *indices,unsigned int numIndices);
 private:
 	
 	/*enum {

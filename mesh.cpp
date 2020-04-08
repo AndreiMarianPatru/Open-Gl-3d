@@ -3,6 +3,7 @@
 
 Mesh::Mesh(float* verts, unsigned vertCount)
 {
+	
 	glGenVertexArrays(1, &m_vertexArrayObject);
 	glBindVertexArray(m_vertexArrayObject);
 	glEnableVertexAttribArray(0);
@@ -32,4 +33,6 @@ void Mesh::PrintPosition()
 {
 	std::cout<<"x: "<<transform.getpos().x<<" "<<"y: "<<transform.getpos().y<<" "<<"z: "<<transform.getpos().z<<std::endl;
 }
+
+
 
