@@ -9,6 +9,11 @@ struct Vertex
 	glm::vec3 Tangent;
 	glm::vec3 BiTangent;
 
+	Vertex()
+	{
+		
+	}
+	
 	Vertex(const Vertex &vert) 
 	{
 		this->Position.x = vert.Position.x;
@@ -21,10 +26,22 @@ struct Vertex
 		BiTangent= glm::vec3(0);
 		
 	}
-	//Vertex(const glm::vec3 position):Vertex(position.x,position.y,position.z)
-	//{
-	//	
-	//}
+	Vertex(const float X,const float Y,const float Z)
+	{
+		this->Position.x=X;
+		this->Position.y=Y;
+		this->Position.z=Z;
+
+		TextureCoord={0,0};
+
+		Tangent= glm::vec3(0);
+		BiTangent= glm::vec3(0);
+		
+	}
+	Vertex(const glm::vec3 position):Vertex(Position.x,Position.y,Position.z)
+	{
+		
+	}
 	Vertex(const glm::vec3 position, const glm::vec2 texCoord )
 	{
 		this->Position=position;
