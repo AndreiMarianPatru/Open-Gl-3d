@@ -195,6 +195,8 @@ int main(int argc, char* argv[])
 
 	Mesh_ind cube(&LoadedVerts[0],LoadedVerts.size(),&Indices[0],Indices.size());
 
+
+
 	
 	
 	while (true)
