@@ -1,4 +1,0 @@
-C:\Users\Andrei-Marian\Desktop\OneDrive - University of Suffolk\graphics\Debug\Graphics.exe
-C:\Users\Andrei-Marian\Desktop\OneDrive - University of Suffolk\graphics\Debug\Graphics.pdb
-C:\Users\Andrei-Marian\Desktop\graphics\Debug\Graphics.exe
-C:\Users\Andrei-Marian\Desktop\graphics\Debug\Graphics.pdb
