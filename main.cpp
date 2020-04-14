@@ -15,6 +15,7 @@
 #include "LightBase.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include "OBJLoader.h"
 
 
 
@@ -149,8 +150,8 @@ int main(int argc, char* argv[])
 
 	
 	Shader* basicShader = new Shader("resources/Basic", camera);
-	GLuint DiffuseTextureID= LoadTexture("brickwall.jpg");
-	GLuint NormalTextureID= LoadTexture("brickwall_normal.jpg");
+	//GLuint DiffuseTextureID= LoadTexture("brickwall.jpg");
+	//GLuint NormalTextureID= LoadTexture("brickwall_normal.jpg");
 
 	Mesh Tri1(Vertices1, 3);
 	/*Mesh_ind Tri2(Vertices2, 3);
@@ -179,6 +180,22 @@ int main(int argc, char* argv[])
 
 	LoadTexture("brickwall.jpg");
 
+	string AmbiantLoc;
+	string DiffuseLoc;
+	string SpecLoc;
+	string NormalLoc;
+
+	vector <uint> Indices;
+	vector<Vertex> LoadedVerts= OBJLoader::LoadOBJ("resources/Block","blocks_01.obj",AmbiantLoc,DiffuseLoc,SpecLoc,NormalLoc,Indices);
+
+	GLuint AmbiantTextureID= LoadTexture("resources/Block/"+AmbiantLoc);
+	GLuint DiffuseTextureID= LoadTexture("resources/Block/"+DiffuseLoc);
+	GLuint SpecularTextureID= LoadTexture("resources/Block/"+SpecLoc);
+	GLuint NormalTextureID= LoadTexture("resources/Block/"+NormalLoc);
+
+	Mesh_ind cube(&LoadedVerts[0],LoadedVerts.size(),&Indices[0],Indices.size());
+
+	
 	
 	while (true)
 	{
@@ -262,14 +279,28 @@ int main(int argc, char* argv[])
 		glUniform1i(TextureLoc, 1);
 		glBindTexture(GL_TEXTURE_2D, NormalTextureID);
 
+		glActiveTexture(GL_TEXTURE2);
+		TextureLoc = glGetUniformLocation(basicShader->GetProgram(), "texture_ambiant");
+		glUniform1i(TextureLoc, 2);
+		glBindTexture(GL_TEXTURE_2D, AmbiantTextureID);
+
+		glActiveTexture(GL_TEXTURE3);
+		TextureLoc = glGetUniformLocation(basicShader->GetProgram(), "texture_specular");
+		glUniform1i(TextureLoc, 3);
+		glBindTexture(GL_TEXTURE_2D, SpecularTextureID);
+
+		
+
 
 		basicShader->Update(square.transform,*light);
+		basicShader->Update(cube.transform,*light);
 
 		
 		
 		
 		//Tri1.Draw();
 		square.Draw();
+		cube.Draw();
 
 		
 		/*Tri2.Draw();
